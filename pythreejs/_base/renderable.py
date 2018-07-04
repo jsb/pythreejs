@@ -65,6 +65,13 @@ class RenderableWidget(DOMWidget):
         }
         self.send(content)
 
+    def download_screenshot(self, filename='pythreejs.png'):
+        content = {
+            'type': 'downloadScreenshot',
+            'filename': filename,
+        }
+        self.send(content)
+
 
 class Preview(RenderableWidget):
     # renderer properties

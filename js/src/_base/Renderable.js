@@ -404,6 +404,22 @@ var RenderableView = widgets.DOMWidgetView.extend({
         });
     },
 
+    downloadScreenshot: function(filename) {
+        var data_url = this.renderer.domElement.toDataURL('image/png');
+        // Create download link
+        var a = document.createElement('a');
+        a.download = filename;
+        a.href = data_url;
+        // Simulate click
+        if (document.createEvent) {
+            e = document.createEvent("MouseEvents");
+            e.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+            a.dispatchEvent(e);
+        } else if (lnk.fireEvent) {
+            a.fireEvent("onclick");
+        }
+    },
+
     disableControls: function() {
         this.debug('Disable controls');
         var that = this;
@@ -416,10 +432,13 @@ var RenderableView = widgets.DOMWidgetView.extend({
 
     onCustomMessage: function(content, buffers) {
         switch(content.type) {
-        case 'freeze':
-            this.freeze();
-            break;
-        default:
+            case 'freeze':
+                this.freeze();
+                break;
+            case 'downloadScreenshot':
+                this.downloadScreenshot(content.filename);
+                break;
+            default:
         }
     },
 
